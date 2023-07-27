@@ -1,8 +1,8 @@
 package com.odk3.projet_tp_api.Service;
 
 import com.odk3.projet_tp_api.Repository.QuizRepository;
+import com.odk3.projet_tp_api.exception.NotFoundException;
 import com.odk3.projet_tp_api.model.Quiz;
-import com.odk3.projet_tp_api.model.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,45 +10,43 @@ import java.util.List;
 
 @Service
 public class QuizService {
-
     @Autowired
     QuizRepository quizRepository;
 
-
-    // creation Quiz
-    public Quiz creerquiz (Quiz quiz){
-        if (quizRepository.findByIdQuiz(quiz.getIdQuiz()) ==null){
-            quizRepository .save(quiz);
-            return quizRepository.findByIdQuiz(quiz.getIdQuiz());
+    public Quiz creerQuiz(Quiz quiz) {
+        if (quizRepository.findByTitreAndUtilisateur(quiz.getTitre(), quiz.getUtilisateur()) == null) {
+            return quizRepository.save(quiz);
         } else {
             return null;
         }
     }
-// modification  de  quiz
-    public Quiz modifquiz(Quiz quiz){
-        if (quizRepository.findByIdQuiz(quiz.getIdQuiz()) != null){
-            quizRepository.save(quiz);
-            return quizRepository.findByIdQuiz(quiz.getIdQuiz());
-        }
-        else {
-            return null;
-        }
 
+    public Quiz modifierQuiz(Quiz quiz) {
+        if (quizRepository.findByIdQuizAndUtilisateur(quiz.getIdQuiz(), quiz.getUtilisateur()) != null) {
+            return quizRepository.save(quiz);
+        } else {
+            throw new NotFoundException("Cet quiz n'existe pas");
+        }
     }
-    // lister le quiz
-      public List<Quiz> listQuiz() {
+
+    public List<Quiz> quizList() {
         return quizRepository.findAll();
     }
-    // supprimer le quiz
-    public String supprimeQuiz(Quiz quiz) {
 
-        if (quizRepository.findByIdQuiz(quiz.getIdQuiz()) != null) {
-            quizRepository.delete(quiz);
-            return "quiz supprimer avec succès";
+    public String supprimerQuiz(Quiz quiz) {
+        if (quizRepository.findByIdQuizAndUtilisateur(quiz.getIdQuiz(), quiz.getUtilisateur()) != null) {
+           quizRepository.delete(quiz);
+           return "Succès";
         } else {
-            return "pas de quiz ";
+            return "not found";
         }
-
     }
 
+    public List<Quiz> rechercherQuiz(String cleTitre) {
+        if (!quizRepository.findByTitreContains(cleTitre).isEmpty()) {
+            return quizRepository.findByTitreContains(cleTitre);
+        } else {
+            throw new NotFoundException("Aucun quiz ne correspond à cet titre");
+        }
+    }
 }

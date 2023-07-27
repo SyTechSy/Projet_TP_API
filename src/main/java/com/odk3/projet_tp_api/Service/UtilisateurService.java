@@ -1,6 +1,7 @@
 package com.odk3.projet_tp_api.Service;
 
 import com.odk3.projet_tp_api.Repository.UtilisateurRepository;
+import com.odk3.projet_tp_api.model.Participer;
 import com.odk3.projet_tp_api.model.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class UtilisateurService {
 
     }
 
+
     public String supprimeUtilisateur(Utilisateur utilisateur) {
 
         if (utilisateurRepository.findByIdUtilisateur(utilisateur.getIdUtilisateur()) != null) {
@@ -57,8 +59,10 @@ public class UtilisateurService {
     public Utilisateur connectionUtilisateur(String email, String mon_de_passe) {
         if (utilisateurRepository.findByEmailAndMotDePasse(email, mon_de_passe) != null) {
             return utilisateurRepository.findByEmailAndMotDePasse(email, mon_de_passe);
+        }else {
+            return null;
         }
-        return null;
+
     }
 
 

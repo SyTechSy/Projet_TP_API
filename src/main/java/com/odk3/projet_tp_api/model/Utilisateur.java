@@ -1,10 +1,15 @@
 package com.odk3.projet_tp_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,7 +26,7 @@ public class Utilisateur {
 
     // Not Null de Spring
     // message : message afficher si le champs de notre Nom est vide
-    @NotNull(message = "Chemps vide")
+    @NotNull(message = "Champs vide")
 
     // lenght de notre nom
     // message : message afficher si le champs de notre Nom est vide
@@ -54,7 +59,7 @@ public class Utilisateur {
 
     // L'Anotation d'Email
     // message : message afficher si le champs de notre email est vide
-    @Email(message = "email correct")
+    @Email(message = "email incorrect")
 
     // Not Null de base de donnée
     @Column(nullable = false)
@@ -63,7 +68,7 @@ public class Utilisateur {
     //======================= POUR MOT DE PASSE ===============================
 
     // Not Null de Spring
-    @NotNull(message = "Chemps vide")
+    @NotNull(message = "Champs vide")
 
     // size : lenght de notre Mot de passe
     // message : message afficher si le champs de notre Mot de passe est vide
@@ -72,4 +77,14 @@ public class Utilisateur {
     // Not Null de base de donnée
     @Column(nullable = false)
     private String motDePasse;
+
+    @OneToMany(mappedBy = "utilisateur", orphanRemoval = true)
+    @JsonIgnore
+    private List<Quiz> quizs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "utilisateur", orphanRemoval = true)
+    @JsonIgnore
+    private List<Participer> participerList = new ArrayList<>();
+
+
 }
